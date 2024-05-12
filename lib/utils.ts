@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import qs from "query-string"
+import { z } from "zod"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -100,7 +101,7 @@ interface UrlQueryParams {
   value: string
 }
 
-export function formUrlQuery({ params, key, value }: UrlQueryParams){
+export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   const currentUrl = qs.parse(params)
 
   currentUrl[key] = value
@@ -117,9 +118,9 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams){
 /**
  * Get account type colors
  */
-export function getAccountTypeColors(type: AccountTypes){
+export function getAccountTypeColors(type: AccountTypes) {
   switch (type) {
-    case 'depository':
+    case "depository":
       return {
         bg: "bg-blue-25",
         lightBg: "bg-blue-100",
@@ -127,7 +128,7 @@ export function getAccountTypeColors(type: AccountTypes){
         subText: "text-blue-700",
       }
 
-    case 'credit':
+    case "credit":
       return {
         bg: "bg-success-25",
         lightBg: "bg-success-100",
@@ -148,7 +149,86 @@ export function getAccountTypeColors(type: AccountTypes){
 /**
  * Count transaction categories
  */
-// export function countTransactionCategories(transactions: Transaction[]): CategoryCount[] {
-//   const categoryCounts: { [category: string]: number } = {}
-//   let totalCount = 0
-// }
+export function countTransactionCategories(
+  transactions: Transaction[]
+): CategoryCount[] {
+  const categoryCounts: { [category: string]: number } = {}
+  let totalCount = 0
+
+  transactions &&
+    transactions.forEach((transaction) => {
+      const category = transaction.category
+
+      if (categoryCounts.hasOwnProperty(category)) {
+        categoryCounts[category]++
+      } else {
+        categoryCounts[category] = 1
+      }
+
+      totalCount++
+    })
+
+  const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
+    (category) => ({
+      name: category,
+      count: categoryCounts[category],
+      totalCount,
+    })
+  )
+
+  aggregatedCategories.sort((a, b) => b.count - a.count)
+
+  return aggregatedCategories
+}
+
+/**
+ * extract customerId fromUrl
+ */
+export function extractCustomerIdFromUrl(url: string) {
+  const parts = url.split("/")
+  const customerId = parts[parts.length - 1]
+  return customerId
+}
+
+/**
+ * encryptId
+ */
+export function encryptId(id: string) {
+  return btoa(id)
+}
+
+/**
+ * decryptId
+ */
+export function decryptId(id: string) {
+  return atob(id)
+}
+
+/**
+ * get Transaction Status
+ */
+export const getTransactionStatus = (date: Date) => {
+  const today = new Date()
+  const twoDaysAgo = new Date(today)
+  twoDaysAgo.setDate(today.getDate() - 2)
+
+  return date > twoDaysAgo ? "Processing" : "Success"
+}
+
+/**
+ * auth FormSchema
+ */
+export const authFormSchema = (type: string) => z.object({
+  // sign-up
+  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  address: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  city: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  state: type === 'sign-in' ? z.string().optional() : z.string().min(2).max(2),
+  postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(3).max(6),
+  dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  ssn: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  // sign-in
+  email: z.string().email(),
+  password: z.string().min(8),
+})
