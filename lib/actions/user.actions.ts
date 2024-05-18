@@ -5,6 +5,7 @@ import { createAdminClient, createSessionClient } from "../appwrite"
 import { cookies } from "next/headers"
 import { encryptId, extractCustomerIdFromUrl, parseStringify } from "../utils"
 import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from "plaid"
+
 import { plaidClient } from '@/lib/plaid'
 import { revalidatePath } from "next/cache"
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions"
@@ -53,8 +54,8 @@ export const signIn = async ({ email, password }: signInProps) => {
 
 export const signUp = async ({ password, ...userData }: SignUpParams) => {
   const { email, firstName, lastName } = userData
-  
-  let newUserAccount
+  console.error('testing')
+  let newUserAccount = null
 
   try {
     const { account, database } = await createAdminClient()

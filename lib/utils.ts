@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import qs from "query-string"
@@ -7,9 +8,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * Format datetime
- */
+// FORMAT DATE TIME
 export const formatDateTime = (dateString: Date) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     weekday: "short",
@@ -155,19 +154,25 @@ export function countTransactionCategories(
   const categoryCounts: { [category: string]: number } = {}
   let totalCount = 0
 
+  // Iterate over each transaction
   transactions &&
     transactions.forEach((transaction) => {
+      // Extract the category from the transaction
       const category = transaction.category
 
+      // If the category exists in the categoryCounts object, increment its count
       if (categoryCounts.hasOwnProperty(category)) {
         categoryCounts[category]++
       } else {
+        // Otherwise, initialize the count to 1
         categoryCounts[category] = 1
       }
 
+      // Increment total count
       totalCount++
     })
 
+  // Convert the categoryCounts object to an array of objects
   const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
     (category) => ({
       name: category,
@@ -176,6 +181,7 @@ export function countTransactionCategories(
     })
   )
 
+  // Sort the aggregatedCategories array by count in descending order
   aggregatedCategories.sort((a, b) => b.count - a.count)
 
   return aggregatedCategories
@@ -185,8 +191,12 @@ export function countTransactionCategories(
  * extract customerId fromUrl
  */
 export function extractCustomerIdFromUrl(url: string) {
+  // Split the URL string by '/'
   const parts = url.split("/")
+
+  // Extract the last part, which represents the customer ID
   const customerId = parts[parts.length - 1]
+
   return customerId
 }
 
@@ -228,7 +238,7 @@ export const authFormSchema = (type: string) => z.object({
   postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(3).max(6),
   dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   ssn: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  // sign-in
+  // both
   email: z.string().email(),
   password: z.string().min(8),
 })

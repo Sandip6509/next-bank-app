@@ -1,20 +1,29 @@
-/**
- * Types
- */
+/* eslint-disable no-unused-vars */
+declare type SearchParamProps = {
+  params: { [key: string]: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
 
-/**
- * Account Types
- */
-declare type AccountTypes =
-  | "depository"
-  | "credit"
-  | "loan"
-  | "investment"
-  | "other"
+// ========================================
 
-/**
- * User
- */
+declare type SignUpParams = {
+  firstName: string
+  lastName: string
+  address1: string
+  city: string
+  state: string
+  postalCode: string
+  dateOfBirth: string
+  ssn: string
+  email: string
+  password: string
+}
+
+declare type LoginUser = {
+  email: string
+  password: string
+}
+
 declare type User = {
   $id: string
   email: string
@@ -32,41 +41,6 @@ declare type User = {
   ssn: string
 }
 
-/**
- * SearchParam
- */
-declare type SearchParamProps = {
-  params: { [key: string]: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-/**
- * SignUpParams
- */
-declare type SignUpParams = {
-  firstName: string
-  lastName: string
-  address1: string
-  city: string
-  state: string
-  postalCode: string
-  dateOfBirth: string
-  ssn: string
-  email: string
-  password: string
-}
-
-/**
- * LoginUser
- */
-declare type LoginUser = {
-  email: string
-  password: string
-}
-
-/**
- * NewUserParams
- */
 declare type NewUserParams = {
   userId: string
   email: string
@@ -74,9 +48,6 @@ declare type NewUserParams = {
   password: string
 }
 
-/**
- * Account
- */
 declare type Account = {
   id: string
   availableBalance: number
@@ -91,9 +62,6 @@ declare type Account = {
   shareableId: string
 }
 
-/**
- * Transaction
- */
 declare type Transaction = {
   id: string
   $id: string
@@ -113,9 +81,6 @@ declare type Transaction = {
   receiverBankId: string
 }
 
-/**
- * Bank
- */
 declare type Bank = {
   $id: string
   accountId: string
@@ -125,6 +90,13 @@ declare type Bank = {
   userId: string
   shareableId: string
 }
+
+declare type AccountTypes =
+  | "depository"
+  | "credit"
+  | "loan "
+  | "investment"
+  | "other"
 
 declare type Category = "Food and Drink" | "Travel" | "Transfer"
 
@@ -164,9 +136,6 @@ declare type NewDwollaCustomerParams = {
   ssn: string
 }
 
-/**
- * Interface
- */
 declare interface CreditCardProps {
   account: Account
   userName: string
@@ -232,7 +201,7 @@ declare interface TotalBalanceBoxProps {
 
 declare interface FooterProps {
   user: User
-  type?: "mobile" | "desktop"
+  type?: 'mobile' | 'desktop'
 }
 
 declare interface RightSidebarProps {
